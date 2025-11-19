@@ -26,7 +26,7 @@ export function clearGallery(){
 
 export function createGallery(images){
     
-    galleryClass.innerHTML = images.map( (el) => `<li class="gallery-item">
+    const markup = images.map( (el) => `<li class="gallery-item">
       <a class="gallery-link" href="${el.largeImageURL}">
         <img
           class="gallery-image"
@@ -57,10 +57,46 @@ export function createGallery(images){
         </ul>
       </div>
     </li>`).join('');
-    
+    galleryClass.innerHTML = markup;
     gallery.refresh();
   }
 
+  export function appendToGallery(images){
+    
+    const markup = images.map( (el) => `<li class="gallery-item">
+      <a class="gallery-link" href="${el.largeImageURL}">
+        <img
+          class="gallery-image"
+          src="${el.webformatURL}"
+          alt="${el.tags}"
+          width="360"
+          height="200"
+        />
+      </a>
+      <div class="card">
+        <ul>
+          <li>
+            <p class="title">Likes</p>
+            <p class="subtitle">${el.likes}</p>
+          </li>
+          <li>
+            <p class="title">Views</p>
+            <p class="subtitle">${el.views}</p>
+          </li>
+          <li>
+            <p class="title">Comments</p>
+            <p class="subtitle">${el.comments}</p>
+          </li>
+          <li>
+            <p class="title">Downloads</p>
+            <p class="subtitle">${el.downloads}</p>
+          </li>
+        </ul>
+      </div>
+    </li>`).join('');
+    galleryClass.insertAdjacentHTML('beforeend', markup);
+    gallery.refresh();
+  }
 
 export function removeLoadMoreButton() {
     showMoreBtnClass.classList.add('hidden');

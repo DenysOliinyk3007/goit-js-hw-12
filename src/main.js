@@ -1,6 +1,6 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
-import { clearGallery, createGallery, removeLoader, showLoader, showLoadMoreButton, removeLoadMoreButton, getImageDimensions } from "./js/render-functions";
+import { clearGallery, createGallery, removeLoader, showLoader, showLoadMoreButton, removeLoadMoreButton, getImageDimensions, appendToGallery } from "./js/render-functions";
 import {getImages} from "./js/pixabay-api";
 const API_KEY = '53125865-ed9f58673896f3ad0b9dfa3df';
 
@@ -22,8 +22,9 @@ let allImages = [];
 removeLoader();
 removeLoadMoreButton();
 
-submitBtnClass.addEventListener('click', async () =>{
-
+submitBtnClass.addEventListener('click', async (evt) =>{
+  evt.preventDefault();
+  removeLoadMoreButton();
   const query = inputQueryClass.value.trim();
   if (!query){
     clearGallery();
@@ -61,9 +62,6 @@ submitBtnClass.addEventListener('click', async () =>{
       removeLoadMoreButton();
     }
 
-
-
-
     
   } catch (error) {
     console.log(error);
@@ -71,14 +69,16 @@ submitBtnClass.addEventListener('click', async () =>{
   }
 })
 
-showMoreBtnClass.addEventListener('click', async () => {
+showMoreBtnClass.addEventListener('click', async (evt) => {
+  evt.preventDefault();
+  removeLoadMoreButton();
   showLoader();
   try {
     const newImages = await getImages(currentquery, page, limit);
     allImages = allImages.concat(newImages.array);
     removeLoader();
 
-    createGallery(allImages);
+    appendToGallery(newImages.array);
 
     setTimeout(() => {
       let elemHeight = getImageDimensions();
@@ -89,13 +89,18 @@ showMoreBtnClass.addEventListener('click', async () => {
     }, 100);
 
     page +=1;
+    
 
     if (page*limit > totalHits){
       removeLoadMoreButton();
-      iziToast.error({message: "We're sorry, but you've reached the end of search results.", position: 'topRight'});
+      iziToast.show({message: "We're sorry, but you've reached the end of search results.", position: 'topRight'});
+    } else{
+      showLoadMoreButton();
     }
   } catch (error) {
     console.log(error);
+    removeLoader();
+    removeLoadMoreButton();
     iziToast.error({message: 'Something went wrong. Try again.', position:'topRight'});
   }
 })
