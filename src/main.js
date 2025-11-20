@@ -64,6 +64,7 @@ submitBtnClass.addEventListener('click', async (evt) =>{
 
     
   } catch (error) {
+    removeLoader();
     console.log(error);
     iziToast.error({message: 'Something went wrong. Try again.', position:'topRight'});
   }
