@@ -58,7 +58,7 @@ submitBtnClass.addEventListener('click', async (evt) =>{
     if (page *limit <= totalHits){
       showLoadMoreButton();  
     } else{
-      iziToast.error({message: 'You have reached the limit.', position: 'topRight'});
+      iziToast.message({message: "We're sorry, but you've reached the end of search results.", position: 'topRight'});
       removeLoadMoreButton();
     }
 
